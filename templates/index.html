@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Clarear Psicologia — Organize sua mente. Entenda seus sentimentos. Psicóloga Dra. Ana Luísa Ribeiro.">
+
+  <title>Clarear Psicologia — Entenda o que você sente</title>
+
+  <!-- Tailwind & Config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#0F172A',
+              blue: '#38BDF8',
+              soft: '#F8FAFC',
+              accent: '#818CF8',
+            },
+          },
+          fontFamily: {
+            heading: ['"DM Sans"', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+
+  <!-- Scripts: GSAP & Alpine -->
+  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    [x-cloak] { display: none !important; }
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3 { font-family: 'DM Sans', sans-serif; letter-spacing: -0.02em; }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #0EA5E9, #818CF8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .blob {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, rgba(255,255,255,0) 70%);
+      filter: blur(60px);
+      z-index: -1;
+    }
+    
+    .card-hover {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-hover:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08);
+    }
+  </style>
+</head>
+
+<body class="bg-white text-slate-600 antialiased" x-data="{ mobileMenu: false }">
+
+  <!-- Scroll Progress Bar -->
+  <div class="fixed top-0 left-0 w-full h-1 z-[60] pointer-events-none">
+    <div id="scroll-progress" class="h-full bg-brand-blue w-0 transition-all duration-150 shadow-[0_0_10px_#38BDF8]"></div>
+  </div>
+
+  <!-- ════════════════════════ NAVIGATION ════════════════════════ -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100">
+    <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="#" class="text-2xl font-bold text-brand-dark tracking-tight flex items-center gap-2">
+        <div class="w-8 h-8 bg-brand-blue rounded-lg flex items-center justify-center">
+          <div class="w-3 h-3 bg-white rounded-full"></div>
+        </div>
+        Clarear<span class="text-brand-blue">.</span>
+      </a>
+
+      <!-- Desktop Links -->
+      <div class="hidden md:flex items-center gap-10 text-sm font-medium text-slate-500">
+        <a href="#sobre" class="hover:text-brand-blue transition-colors">Sobre</a>
+        <a href="#metodo" class="hover:text-brand-blue transition-colors">O Método</a>
+        <a href="#ajuda" class="hover:text-brand-blue transition-colors">Para quem?</a>
+        <a href="#agendamento" class="bg-brand-dark text-white px-6 py-3 rounded-full hover:bg-slate-800 transition-all shadow-lg shadow-slate-200">
+          Começar agora
+        </a>
+      </div>
+
+      <!-- Mobile Toggle -->
+      <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-slate-600">
+        <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+        <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div x-show="mobileMenu" x-cloak x-transition.opacity class="fixed inset-0 top-20 bg-white z-40 md:hidden px-6 py-10 space-y-6 text-xl font-medium">
+      <a @click="mobileMenu = false" href="#sobre" class="block">Sobre</a>
+      <a @click="mobileMenu = false" href="#metodo" class="block">O Método</a>
+      <a @click="mobileMenu = false" href="#ajuda" class="block">Para quem?</a>
+      <a @click="mobileMenu = false" href="#agendamento" class="block text-brand-blue">Agendar Conversa</a>
+    </div>
+  </nav>
+
+  <!-- ════════════════════════ HERO ════════════════════════ -->
+  <section class="relative pt-44 pb-32 overflow-hidden">
+    <div class="blob top-0 -left-20 animate-pulse"></div>
+    <div class="blob bottom-0 -right-20"></div>
+
+    <div class="max-w-6xl mx-auto px-6 text-center reveal">
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-sky-50 text-brand-blue rounded-full text-xs font-bold uppercase tracking-widest mb-8">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-blue"></span>
+        </span>
+        Atendimento Online & Presencial
+      </div>
+      
+      <h1 class="text-5xl md:text-8xl font-bold text-brand-dark mb-8 leading-[1.1]">
+        Organize sua mente.<br>
+        <span class="gradient-text">Clareie sua vida.</span>
+      </h1>
+      
+      <p class="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed font-light">
+        Um espaço seguro para quem sente que os pensamentos estão rápidos demais. Vamos entender juntos o que está passando na sua cabeça?
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+        <a href="#agendamento" class="w-full sm:w-auto bg-brand-dark text-white text-lg font-semibold px-10 py-5 rounded-2xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-200">
+          Agendar primeira sessão
+        </a>
+        <a href="#metodo" class="w-full sm:w-auto text-slate-500 font-medium px-10 py-5 hover:text-brand-dark flex items-center justify-center gap-2 group">
+          Conhecer o método
+          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+      </div>
+
+      <!-- Conversion: Trust Badges -->
+      <div class="mt-12 flex flex-wrap justify-center gap-8 text-slate-400 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] reveal" style="transition-delay: 500ms;">
+        <span class="flex items-center gap-2 border-r border-slate-200 pr-8 last:border-0 last:pr-0">
+          <svg class="w-4 h-4 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Sigilo Profissional
+        </span>
+        <span class="flex items-center gap-2 border-r border-slate-200 pr-8 last:border-0 last:pr-0">
+          <svg class="w-4 h-4 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Horários Flexíveis
+        </span>
+        <span class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          Presencial ou Online
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════ SOBRE ════════════════════════ -->
+  <section id="sobre" class="py-32 bg-slate-50/50">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center">
+      <div class="relative">
+        <div class="aspect-[4/5] rounded-[2rem] bg-slate-200 overflow-hidden shadow-2xl relative z-10">
+          <!-- Imagem da Psicóloga -->
+          <img src="/static/img/Ana Luiza.png" alt="Dra. Ana Luísa Ribeiro" class="w-full h-full object-cover">
+        </div>
+        <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-brand-blue/10 rounded-full blur-3xl"></div>
+      </div>
+
+      <div class="space-y-8 reveal">
+        <h2 class="text-4xl md:text-5xl font-bold text-brand-dark">
+          Oi, eu sou a <span class="text-brand-blue">Ana Luísa.</span>
+        </h2>
+        <p class="text-xl text-slate-500 leading-relaxed">
+          Ajudo jovens adultos a lidarem com o caos da rotina moderna. Acredito que a psicologia não precisa ser fria nem distante.
+        </p>
+        <p class="text-slate-500 leading-relaxed">
+          Meu foco não é apenas "tratar problemas", mas fornecer as ferramentas para você nomear o que sente e tomar decisões com mais segurança. Se você se sente perdido ou sobrecarregado, saiba que existe um caminho de volta para a clareza.
+        </p>
+        <div class="pt-4 flex items-center gap-6">
+          <div>
+            <p class="text-brand-dark font-bold">CRP 06/123456</p>
+            <p class="text-sm text-slate-400">Psicóloga Clínica</p>
+          </div>
+          <div class="w-px h-10 bg-slate-200"></div>
+          <div>
+            <p class="text-brand-dark font-bold">São Paulo, SP</p>
+            <p class="text-sm text-slate-400">Atendimento Híbrido</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════ MÉTODO ════════════════════════ -->
+  <section id="metodo" class="py-32">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-20 reveal">
+        <h2 class="text-4xl md:text-5xl font-bold text-brand-dark mb-6">O Método Clarear</h2>
+        <p class="text-xl text-slate-400 max-w-2xl mx-auto">Um processo simples e direto para organizar o que parece confuso.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-10">
+        <!-- Passo 1 -->
+        <div class="p-10 rounded-3xl bg-white border border-slate-100 card-hover reveal">
+          <div class="w-14 h-14 bg-sky-50 text-brand-blue rounded-2xl flex items-center justify-center text-2xl font-bold mb-8">1</div>
+          <h3 class="text-2xl font-bold text-brand-dark mb-4">Entender</h3>
+          <p class="text-slate-500 leading-relaxed">Damos nome às emoções. Tiramos o peso do desconhecido e começamos a entender o que seu corpo e mente estão tentando dizer.</p>
+        </div>
+
+        <!-- Passo 2 -->
+        <div class="p-10 rounded-3xl bg-white border border-slate-100 card-hover reveal">
+          <div class="w-14 h-14 bg-indigo-50 text-indigo-400 rounded-2xl flex items-center justify-center text-2xl font-bold mb-8">2</div>
+          <h3 class="text-2xl font-bold text-brand-dark mb-4">Organizar</h3>
+          <p class="text-slate-500 leading-relaxed">Identificamos padrões. Por que você reage assim? De onde vem esse medo? Colocamos as peças do quebra-cabeça no lugar certo.</p>
+        </div>
+
+        <!-- Passo 3 -->
+        <div class="p-10 rounded-3xl bg-white border border-slate-100 card-hover reveal">
+          <div class="w-14 h-14 bg-emerald-50 text-emerald-400 rounded-2xl flex items-center justify-center text-2xl font-bold mb-8">3</div>
+          <h3 class="text-2xl font-bold text-brand-dark mb-4">Clarear</h3>
+          <p class="text-slate-500 leading-relaxed">Hora de agir. Com a mente limpa, você toma decisões baseadas nos seus valores, e não no impulso ou na ansiedade.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════ DEPOIMENTOS ════════════════════════ -->
+  <section id="depoimentos" class="py-32 bg-slate-50/50">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <h2 class="text-4xl md:text-5xl font-bold text-brand-dark mb-6">Depoimentos</h2>
+      <div id="testimonials-container" class="grid md:grid-cols-3 gap-10 mt-20">
+        <!-- Carregado via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════ AGENDAMENTO ════════════════════════ -->
+  <section id="agendamento" class="py-32 bg-brand-dark text-white relative overflow-hidden text-center">
+    <div class="max-w-4xl mx-auto px-6 relative z-10">
+      <h2 class="text-4xl md:text-6xl font-bold mb-16">Vamos conversar?</h2>
+      <form id="agendar-form" class="grid md:grid-cols-2 gap-8 bg-slate-900/50 p-8 md:p-12 rounded-[2.5rem] border border-slate-800 backdrop-blur-md text-left">
+        <div class="space-y-6">
+          <input type="text" name="nome" required placeholder="Nome completo" class="w-full bg-slate-800 border-none rounded-2xl px-6 py-4 text-white outline-none">
+          <input type="email" name="email" required placeholder="Seu melhor e-mail" class="w-full bg-slate-800 border-none rounded-2xl px-6 py-4 text-white outline-none">
+          <input type="tel" name="telefone" placeholder="WhatsApp" class="w-full bg-slate-800 border-none rounded-2xl px-6 py-4 text-white outline-none">
+        </div>
+        <div class="space-y-6 flex flex-col">
+          <textarea name="mensagem" required placeholder="Como posso te ajudar?" class="w-full h-full min-h-[150px] bg-slate-800 border-none rounded-2xl px-6 py-4 text-white outline-none resize-none"></textarea>
+          <button type="submit" class="w-full bg-brand-blue text-brand-dark text-lg font-bold py-5 rounded-2xl hover:scale-[1.02] transition-transform flex items-center justify-center gap-3">
+            <span id="btn-text">Enviar</span>
+            <div id="btn-spinner" class="hidden w-5 h-5 border-2 border-brand-dark border-t-transparent rounded-full animate-spin"></div>
+          </button>
+        </div>
+      </form>
+      <div id="form-message" class="mt-8 hidden p-6 rounded-2xl text-center font-medium"></div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════ FOOTER ════════════════════════ -->
+  <footer class="py-16 border-t border-slate-100 text-center">
+    <p class="text-slate-400 text-sm">© 2026 Dra. Ana Luísa Ribeiro. Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- API Integration & Scripts -->
+  <script>
+    async function loadTestimonials() {
+      const container = document.getElementById('testimonials-container');
+      try {
+        const response = await fetch('/api/depoimentos');
+        const data = await response.json();
+        if (data.length > 0) {
+          container.innerHTML = data.map(dep => `
+            <div class="p-10 rounded-3xl bg-white border border-slate-100 card-hover">
+              <p class="text-slate-500 italic mb-8">"${dep.texto}"</p>
+              <p class="text-brand-dark font-bold text-sm">${dep.nome}</p>
+            </div>
+          `).join('');
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    const form = document.getElementById('agendar-form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btnText = document.getElementById('btn-text');
+      const btnSpinner = document.getElementById('btn-spinner');
+      const formMessage = document.getElementById('form-message');
+      
+      btnText.textContent = 'Enviando...';
+      btnSpinner.classList.remove('hidden');
+
+      try {
+        const response = await fetch('/api/agendar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form)))
+        });
+        if (response.ok) {
+          form.reset();
+          formMessage.textContent = 'Sucesso!';
+          formMessage.className = 'mt-8 p-6 rounded-2xl text-center font-medium bg-emerald-50 text-emerald-600';
+          formMessage.classList.remove('hidden');
+        }
+      } catch (e) { console.error(e); }
+      finally {
+        btnText.textContent = 'Enviar';
+        btnSpinner.classList.add('hidden');
+      }
+    });
+
+    window.addEventListener('scroll', () => {
+      const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+      document.getElementById('scroll-progress').style.width = scrolled + '%';
+    });
+
+    loadTestimonials();
+  </script>
+
+  <!-- GSAP Animations Init -->
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.utils.toArray('.reveal').forEach(el => {
+      gsap.from(el, {
+        scrollTrigger: el,
+        y: 60,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power4.out"
+      });
+    });
+  </script>
+
+</body>
+</html>
